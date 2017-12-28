@@ -1,6 +1,8 @@
 package DocumentParser;
 
 import DocumentParser.Elements.Element;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -13,10 +15,17 @@ public class Parser {
     }
 
     public List<Element> findChildren(){
-        ElementType type = this.type.getLowerType();
+        ElementType childType = this.type.getLowerType();
+        List<Element> children = new ArrayList<>();
         int lastOccurrence = -1;
-
-
+        for(int i = 0; i < rawText.size(); i++){
+            if(type.getPattern().matcher(rawText.get(i)).matches()){
+                if(lastOccurrence != -1){
+                    children.add(new Element(childType, rawText.subList(lastOccurrence, i)));
+                }
+                lastOccurrence = i;
+            }
+        }
 
         return null;
     }
