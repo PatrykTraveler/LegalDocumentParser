@@ -1,24 +1,27 @@
 package DocumentParser.Elements;
 
 import DocumentParser.ElementType;
-import DocumentParser.Parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Element {
+public abstract class Element {
     public List<String> content;
-    public List<Element> children;
     public ElementType type;
+    public String firstLine;
+
+    public List<Element> children = new ArrayList<>();
 
     public Element(ElementType type, List<String> content){
-        this.content = content;
         this.type = type;
-
-        Parser parser = new Parser(this.type, content);
-        children = parser.findChildren();
     }
 
-    public ElementType getType(){
-        return this.type;
+    public void addChild(Element child){
+        this.children.add(child);
     }
+
+    public Element getChild(int index){
+        return this.children.get(index);
+    }
+
 }

@@ -1,32 +1,36 @@
 package DocumentParser;
 
+import DocumentParser.ElementType;
 import DocumentParser.Elements.Element;
+import DocumentParser.Elements.ElementFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
-    private final ElementType type;
-    private final List<String> rawText;
+    private Element element;
+    public ElementType type;
+    public List<String> content;
 
-    public Parser(ElementType type, List<String> rawText){
+    public Parser(List<String> content, ElementType type, Element element){
+        this.content = content;
         this.type = type;
-        this.rawText = rawText;
+        this.element = element;
     }
 
-    public List<Element> findChildren(){
-        ElementType childType = this.type.getLowerType();
-        List<Element> children = new ArrayList<>();
+    public void parse(){
+        ElementType lowerType = this.type.getLowerType();
         int lastOccurrence = -1;
-        for(int i = 0; i < rawText.size(); i++){
-            if(type.getPattern().matcher(rawText.get(i)).matches()){
-                if(lastOccurrence != -1){
-                    children.add(new Element(childType, rawText.subList(lastOccurrence, i)));
+        for(int i = 0; i < this.content.size(); i++){
+            if(lowerType.getPattern().matcher(content.get(i)).matches()){
+                if(lastOccurrence != -1) {
+                    this.element.addChild(ElementFactory.createElement(lowerType, content.subList(lastOccurrence, i)));
+                    lastOccurrence = i;
                 }
-                lastOccurrence = i;
+                else
+                    lastOccurrence = i;
             }
         }
-
-        return null;
     }
+
 }

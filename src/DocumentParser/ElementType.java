@@ -7,15 +7,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public enum ElementType {
-    Text(""),
-    Letter(""),
-    Point(""),
-    Paragraph(""),
-    Article("^(Art. )\\d+[a-z]*."),
+    Text("()(.*)()"),
+    Letter("^(\\[a-z])\\)\\s()(.*)"),
+    Point("^(\\d+\\p{L}*)\\)\\s()(.*)"),
+    Paragraph("^(\\d+)\\.\\s()(.*)"),
+    Article("^Art\\. (\\d+[a-z]*)\\.\\s*()(.*)"),
     Title("^\\p{Lu}{2,}.+"),
-    Chapter("^Rozdział ([IVCXD]*\\d*)"),
-    Section("^DZIAŁ [IVCXD]+[A-Z]*\\s*"),
-    Document("");
+    Chapter("^Rozdział (\\d+[a-zA-Z]*|[IVXCDL]+[a-zA-Z]*)\\s*(.*)()"),
+    Section("^DZIAŁ ([IVXCD]+[A-Z]*)\\s*(.*)()"),
+    Root("Just nothing");
 
     private final Pattern pattern;
 
