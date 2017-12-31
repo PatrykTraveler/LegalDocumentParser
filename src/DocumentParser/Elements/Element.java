@@ -14,14 +14,6 @@ public abstract class Element {
 
     public Element(ElementType type, List<String> content){
         this.type = type;
+        this.firstLine = content.get(0);
     }
-
-    public void addChild(Element child){
-        this.children.add(child);
-    }
-
-    public Element getChild(int index){
-        return this.children.get(index);
-    }
-
 }

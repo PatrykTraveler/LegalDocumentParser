@@ -18,19 +18,22 @@ public class Parser {
         this.element = element;
     }
 
-    public void parse(){
+    public ArrayList<Element> parse(){
         ElementType lowerType = this.type.getLowerType();
+        ArrayList<Element> children = new ArrayList<>();
         int lastOccurrence = -1;
+
         for(int i = 0; i < this.content.size(); i++){
             if(lowerType.getPattern().matcher(content.get(i)).matches()){
                 if(lastOccurrence != -1) {
-                    this.element.addChild(ElementFactory.createElement(lowerType, content.subList(lastOccurrence, i)));
+                    children.add(ElementFactory.createElement(lowerType, content.subList(lastOccurrence, i)));
                     lastOccurrence = i;
                 }
                 else
                     lastOccurrence = i;
             }
         }
+        return children;
     }
 
 }

@@ -22,7 +22,7 @@ public class MainApplication {
 
         lines = prepareFile(lines);
         Element root = new Root(lines);
-        root.children.forEach(child -> System.out.println(child.content));
+        root.children.forEach(child -> System.out.println(child.firstLine));
 
     }
 

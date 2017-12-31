@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public enum ElementType {
-    Text("()(.*)()"),
+    Text("(?s).*"),
     Letter("^(\\[a-z])\\)\\s()(.*)"),
     Point("^(\\d+\\p{L}*)\\)\\s()(.*)"),
     Paragraph("^(\\d+)\\.\\s()(.*)"),
