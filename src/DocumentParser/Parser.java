@@ -11,7 +11,7 @@ import java.util.List;
 public class Parser {
     private Element element;
     public ElementType type;
-    public List<String> content;
+    public ArrayList<String> content;
 
     public Parser(ArrayList<String> content, ElementType type, Element element){
         this.content = content;
@@ -28,6 +28,8 @@ public class Parser {
         for(int i = 0; i < this.content.size(); i++){
             if(lowerType.getPattern().matcher(content.get(i)).matches()){
                 if(lastOccurrence != -1) {
+                    System.out.print("Początek");
+                    System.out.println(content.get(0));
                     children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, i))));
                     lastOccurrence = i;
                 }
@@ -35,8 +37,10 @@ public class Parser {
                     lastOccurrence = i;
             }
         }
-        if(lastOccurrence != -1)
-            children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, content.size()))));
+        if(lastOccurrence != -1) {
+            int size = content.size();
+            children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, size))));
+        }
 
         return children;
     }
