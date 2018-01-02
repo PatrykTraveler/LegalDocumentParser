@@ -5,6 +5,7 @@ import DocumentParser.Elements.Element;
 import DocumentParser.Elements.ElementFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Parser {
@@ -12,11 +13,12 @@ public class Parser {
     public ElementType type;
     public List<String> content;
 
-    public Parser(List<String> content, ElementType type, Element element){
+    public Parser(ArrayList<String> content, ElementType type, Element element){
         this.content = content;
         this.type = type;
         this.element = element;
     }
+
 
     public ArrayList<Element> parse(){
         ElementType lowerType = this.type.getLowerType();
@@ -26,14 +28,16 @@ public class Parser {
         for(int i = 0; i < this.content.size(); i++){
             if(lowerType.getPattern().matcher(content.get(i)).matches()){
                 if(lastOccurrence != -1) {
-                    children.add(ElementFactory.createElement(lowerType, content.subList(lastOccurrence, i)));
+                    children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, i))));
                     lastOccurrence = i;
                 }
                 else
                     lastOccurrence = i;
             }
         }
+        if(lastOccurrence != -1)
+            children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, content.size()))));
+
         return children;
     }
-
 }

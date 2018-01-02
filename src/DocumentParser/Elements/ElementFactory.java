@@ -2,10 +2,11 @@ package DocumentParser.Elements;
 
 import DocumentParser.ElementType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElementFactory {
-    public static Element createElement(ElementType type, List<String> content){
+    public static Element createElement(ElementType type, ArrayList<String> content){
         switch(type){
             case Root:
                 return new Root(content);
@@ -18,13 +19,13 @@ public class ElementFactory {
             case Article:
                 return new Article(content);
             case Paragraph:
-                return null;
+                return new Paragraph(content);
             case Point:
-                return null;
+                return new Point(content);
             case Letter:
-                return null;
+                return new Letter(content);
             case Text:
-                return null;
+                return new Text(content);
 
 
         }

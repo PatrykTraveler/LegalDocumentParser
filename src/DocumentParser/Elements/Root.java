@@ -3,11 +3,11 @@ package DocumentParser.Elements;
 import DocumentParser.ElementType;
 import DocumentParser.Parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Root extends Element {
-    public Root(List<String> content){
+    public Root(ArrayList<String> content){
         super(ElementType.Root, content);
-        this.children = new Parser(content, this.type, this).parse();
     }
 }
