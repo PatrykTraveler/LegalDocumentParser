@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public abstract class Element {
-    public ArrayList<String> content = new ArrayList<>();
+    public String content;
     public ElementType type;
 
     public String identifier;
@@ -18,8 +18,8 @@ public abstract class Element {
 
     public Element(ElementType type, ArrayList<String> content){
         this.type = type;
-        //Matcher matcher = this.type.getPattern().matcher(content.get(0));
-        //matcher.find();
+        Matcher matcher = this.type.getPattern().matcher(content.get(0));
+        matcher.find();
         ArrayList<String> text = new ArrayList<>();
         if(this.type == ElementType.Root){
             this.identifier = "";
@@ -40,7 +40,7 @@ public abstract class Element {
             this.identifier = content.get(0);
             this.title = "";
             text = new ArrayList<>(content.subList(1, content.size()));
-            text.add("dupa");
+            text.add(0, matcher.group(3));
         }
         if(this.type == ElementType.Letter || this.type == ElementType.Point || this.type == ElementType.Paragraph){
             this.identifier = content.get(0).substring(0, 3);
@@ -53,14 +53,21 @@ public abstract class Element {
             this.title = "";
             text = new ArrayList<>(content);
         }
-
-        Parser parser = new Parser(text, this.type, this);
-
-        ElementType tempType = this.type;
-        while(parser.parse().size() == 0){
-            parser = new Parser(text, tempType.getLowerType(), this);
-            tempType = tempType.getLowerType();
+        if(this.type == ElementType.Article) {
+            System.out.println(this.type);
+            text.forEach(System.out::println);
         }
-        this.children = parser.parse();
+
+        if(this.type != ElementType.Text) {
+
+            Parser parser = new Parser(text, this.type, this);
+
+            ElementType tempType = this.type;
+            while (parser.parse().size() == 0) {
+                parser = new Parser(text, tempType.getLowerType(), this);
+                tempType = tempType.getLowerType();
+            }
+            this.children = parser.parse();
+        }
     }
 }

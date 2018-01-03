@@ -28,8 +28,6 @@ public class Parser {
         for(int i = 0; i < this.content.size(); i++){
             if(lowerType.getPattern().matcher(content.get(i)).matches()){
                 if(lastOccurrence != -1) {
-                    System.out.print("Początek");
-                    System.out.println(content.get(0));
                     children.add(ElementFactory.createElement(lowerType, new ArrayList<>(content.subList(lastOccurrence, i))));
                     lastOccurrence = i;
                 }

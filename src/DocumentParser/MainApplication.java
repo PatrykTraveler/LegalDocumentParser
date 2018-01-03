@@ -23,16 +23,16 @@ public class MainApplication {
         }
 
         lines = prepareFile(lines);
-        //lines.stream().filter(str -> !str.startsWith("\u00a9") && !str.matches("^\\d{4}-\\d{2}-\\d{2}\\s*")).forEach(System.out::println);
+        lines = new ArrayList<>(lines.stream().filter(str -> !str.startsWith("\u00a9") && !str.matches("^\\d{4}-\\d{2}-\\d{2}\\s*")).collect(Collectors.toList()));
         Root root = new Root(lines);
 
-        root.children.forEach(child -> {
+        /*root.children.forEach(child -> {
             System.out.println(child.identifier);
             child.children.forEach(child1 -> {
                 System.out.println(child1.identifier);
                 child1.children.forEach(child2 -> System.out.println(child2.identifier));
             });
-        });
+        });*/
 
 
 
