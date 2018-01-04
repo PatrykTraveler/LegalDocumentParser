@@ -1,26 +1,25 @@
-package DocumentParser.Elements;
-
-import DocumentParser.ElementType;
-import DocumentParser.Parser;
+package DocumentParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 
-public abstract class Element {
-    public String content;
-    public ElementType type;
+public class Element {
+    public final List<String> content = new ArrayList<>();
 
+    public final ElementType type;
     public String identifier;
     public String title;
 
-    public List<Element> children = new ArrayList<>();
+    public ArrayList<Element> children = new ArrayList<>();
 
     public Element(ElementType type, ArrayList<String> content){
         this.type = type;
         Matcher matcher = this.type.getPattern().matcher(content.get(0));
         matcher.find();
         ArrayList<String> text = new ArrayList<>();
+
         if(this.type == ElementType.Root){
             this.identifier = "";
             this.title = "";
@@ -32,42 +31,39 @@ public abstract class Element {
             text = new ArrayList<>(content.subList(1, content.size()));
         }
         if(this.type == ElementType.Section || this.type == ElementType.Chapter){
-            this.identifier = content.get(0);
+            this.identifier = matcher.group(1);
             this.title = content.get(1);
             text = new ArrayList<>(content.subList(2, content.size()));
         }
         if(this.type == ElementType.Article){
-            this.identifier = content.get(0);
+            this.identifier = matcher.group(1);
             this.title = "";
             text = new ArrayList<>(content.subList(1, content.size()));
-            text.add(0, matcher.group(3));
+            text.add(0, matcher.group(2));
         }
         if(this.type == ElementType.Letter || this.type == ElementType.Point || this.type == ElementType.Paragraph){
-            this.identifier = content.get(0).substring(0, 3);
+            this.identifier = matcher.group(1);
             this.title = "";
             text = new ArrayList<>(content.subList(1, content.size()));
-            text.add(0, content.get(0).substring(3, content.get(0).length()));
-        }
-        if(this.type == ElementType.Text){
-            this.identifier = "";
-            this.title = "";
-            text = new ArrayList<>(content);
-        }
-        if(this.type == ElementType.Article) {
-            System.out.println(this.type);
-            text.forEach(System.out::println);
+            text.add(0, matcher.group(2));
         }
 
         if(this.type != ElementType.Text) {
-
-            Parser parser = new Parser(text, this.type, this);
-
-            ElementType tempType = this.type;
-            while (parser.parse().size() == 0) {
-                parser = new Parser(text, tempType.getLowerType(), this);
-                tempType = tempType.getLowerType();
-            }
-            this.children = parser.parse();
+            this.children = new Parser(text, this.type, this).parse();
         }
+
+        //test
+        if(this.type == ElementType.Paragraph) {
+            System.out.println("<" + this.identifier + ">");
+            this.content.forEach(System.out::println);
+            //System.out.println(this.content.size());
+            //text.forEach(System.out::println);
+        }
+    }
+
+    public Stream<Element> streamElements(){
+        return Stream.concat(
+                Stream.of(this),
+                children.stream().flatMap(Element::streamElements));
     }
 }
