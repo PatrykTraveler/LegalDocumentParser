@@ -24,13 +24,13 @@ public class Parser {
                     if (lastOccurrence != -1)
                         children.add(new Element(lowerType, new ArrayList<>(content.subList(lastOccurrence, i))));
 
-                    if(firstOccurrence == -1)
+                    if(firstOccurrence == -1)//first occurrence of any object different than plain text
                         firstOccurrence = i;
 
                     lastOccurrence = i;
                 }
             }
-
+            //add rest of elements
             if (lastOccurrence != -1) {
                 children.add(new Element(lowerType, new ArrayList<>(content.subList(lastOccurrence, content.size()))));
             }
