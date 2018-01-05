@@ -7,13 +7,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public enum ElementType {
-    Text("(?s).*"),
     Letter("(^[a-z]+\\))\\s*(.*)"),
-    Point("^(\\d+\\p{L}*\\))\\s(.*)"),
+    Point("^(\\d+[a-z]*\\))\\s(.*)"),
     Paragraph("^(\\d+[a-z]*\\.)\\s(.*)"),
     Article("(^Art. \\d+[a-z]*)\\.\\s*(.*)"),
-    Title("^\\p{Lu}{2,}.+"),
-    Chapter("(^Rozdział \\d+[a-zA-Z]*)|(^Rozdział [IVXCDL]+[a-zA-Z]*)\\s*.*"),
+    Title("^([A-Z\\s?]{2,})$"),
+    Chapter("(^Rozdział \\d+[a-zA-Z]*|^Rozdział [IVXCDL]+[a-zA-Z]*)\\s*.*"),
     Section("(^DZIAŁ [IVXCD]+[A-Z]*)\\s*.*"),
     Root("Just nothing");
 
@@ -30,6 +29,6 @@ public enum ElementType {
     public ElementType getLowerType(){
         if(this.ordinal() > 0)
             return ElementType.values()[this.ordinal() - 1];
-        return this;
+        return null;
     }
 }

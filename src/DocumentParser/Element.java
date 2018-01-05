@@ -6,15 +6,15 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 public class Element {
-    public final List<String> content = new ArrayList<>();
+    public List<String> content = new ArrayList<>();
 
-    public final ElementType type;
+    public ElementType type;
     public String identifier;
     public String title;
 
     public ArrayList<Element> children = new ArrayList<>();
 
-    public Element(ElementType type, ArrayList<String> content){
+    public Element(ElementType type, List<String> content){
         this.type = type;
         Matcher matcher = this.type.getPattern().matcher(content.get(0));
         matcher.find();
@@ -26,7 +26,7 @@ public class Element {
             text = new ArrayList<>(content);
         }
         if(this.type == ElementType.Title){
-            this.identifier = content.get(0);
+            this.identifier = "";
             this.title = content.get(0);
             text = new ArrayList<>(content.subList(1, content.size()));
         }
@@ -39,7 +39,8 @@ public class Element {
             this.identifier = matcher.group(1);
             this.title = "";
             text = new ArrayList<>(content.subList(1, content.size()));
-            text.add(0, matcher.group(2));
+            if(matcher.group(2).length() > 0)
+                text.add(0, matcher.group(2));
         }
         if(this.type == ElementType.Letter || this.type == ElementType.Point || this.type == ElementType.Paragraph){
             this.identifier = matcher.group(1);
@@ -48,19 +49,10 @@ public class Element {
             text.add(0, matcher.group(2));
         }
 
-        if(this.type != ElementType.Text) {
-            this.children = new Parser(text, this.type, this).parse();
-        }
-
-        //test
-        if(this.type == ElementType.Paragraph) {
-            System.out.println("<" + this.identifier + ">");
-            this.content.forEach(System.out::println);
-            //System.out.println(this.content.size());
-            //text.forEach(System.out::println);
-        }
+        this.children = new Parser(text, this.type, this).parse();
     }
 
+    //recursively flattens whole structure of a document
     public Stream<Element> streamElements(){
         return Stream.concat(
                 Stream.of(this),
